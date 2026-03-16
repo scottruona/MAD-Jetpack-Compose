@@ -228,6 +228,20 @@ fun ToDoAppTopBar(
     onRestoreArchive: () -> Unit,
     onCreateTasks: () -> Unit
 ) {
+    var showDeleteTasksDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteTasksDialog) {
+        DeleteTasksDialog(
+            onDismiss = {
+                showDeleteTasksDialog = false
+            },
+            onConfirm = {
+                showDeleteTasksDialog = false
+                onDeleteCompletedTasks()
+            }
+        )
+    }
+
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -253,7 +267,7 @@ fun ToDoAppTopBar(
                 )
             }
             IconButton(
-                onClick = onDeleteCompletedTasks,
+                onClick = { showDeleteTasksDialog = true },
                 enabled = completedTasksExist
             ) {
                 Icon(
